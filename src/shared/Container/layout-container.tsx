@@ -1,8 +1,8 @@
 // Interfaces
-import { CustomComponentProps } from '../../features/interface/interfaces'
+import { CustomComponentProps } from '../interface/interfaces'
 
 // Utilities
-import { mergeClassName } from '../utils/utils'
+import { mergeClassName } from '../utils/MergeCn'
 
 /**
  * A container component to standardize layout padding and width.

@@ -1,5 +1,10 @@
+// Hooks
 import { useEffect, useRef, useState } from 'react'
+
+// Icons
 import { IoIosSearch } from 'react-icons/io'
+
+// Navigate
 import {
   Link,
   useLocation,
@@ -7,14 +12,16 @@ import {
   useSearchParams,
 } from 'react-router-dom'
 
-import { SearchResultsDropdown } from '../../features/SearchResultsDropdown/search-results-dropdown'
-import LayoutContainer from '../../shared/Container/layout-container'
-import { mergeClassName } from '../../shared/utils/utils'
+// Features
+import { SearchResultsDropdown } from '@/features/SearchResultsDropdown'
 
+// Shared
+import LayoutContainer from '@/shared/Container/layout-container'
+import { mergeClassName } from '@/shared/utils/MergeCn'
+
+// Const
 const MENU_CLASS_ACTIVE = 'bg-primary'
-
 const MENU_CLASS = 'py-1 px-1.5 hover:bg-primary rounded-md mobile:px-6'
-
 
 /**
  * Header component for the application.
@@ -45,7 +52,7 @@ const Header = () => {
     }
   }
 
-    /**
+  /**
    * Initialize the search keyword based on the current path.
    */
   const initKeyWord = () => {
@@ -56,7 +63,7 @@ const Header = () => {
     }
   }
 
-    /**
+  /**
    * Reset search focus and keyword when clicking outside the input.
    */
   const onWindowClick = () => {
@@ -64,7 +71,7 @@ const Header = () => {
     initKeyWord()
   }
 
-   /**
+  /**
    * Dynamically generate menu classes based on the current path.
    */
   const getMenuClass = (path: string) => {
@@ -89,8 +96,8 @@ const Header = () => {
   }, [])
 
   return (
-    <div className="bg-header">
-      <LayoutContainer className="flex items-center justify-between">
+    <div className="bg-header sticky top-0 z-50">
+      <LayoutContainer className="flex items-center justify-between gap-3">
         {/* brand menu */}
         <div className="flex items-center gap-6">
           {/* brand */}

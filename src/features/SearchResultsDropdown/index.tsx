@@ -2,16 +2,13 @@
 import { useEffect, useState } from 'react'
 
 // Interfaces
-import { Film } from '../interface/interfaces'
+import { SearchResultsDropdownProps } from './interface'
 
-// Components
-import { Image } from '../Image/image'
+// Features
+import { Image } from '../Image'
 
-
-interface SearchResultsDropdownProps {
-  keyword: string
-  goToSearchPage: Function
-}
+// Shared -> interface
+import { Film } from '@/shared/interface/interfaces'
 
 /**
  * A dropdown component displaying search results.
@@ -38,6 +35,7 @@ export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
         genreIds: [1, 2, 3, 4, 5, 6, 7],
         posterPath: '',
         seasons: [],
+        MediaType: 'tv',
       })
     }
     setItems(mockFilms)
@@ -48,7 +46,7 @@ export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
   }, [props.keyword])
 
   return (
-    <div className="absolute top-[48px] left-0 right-0 rounded-md overflow-hidden bg-header">
+    <div className="absolute top-[48px] left-0 right-0 rounded-md overflow-auto bg-header max-h-[400px] p-3 shadow-lg">
       {items.map((film, i) => (
         <div
           key={i}
@@ -57,7 +55,7 @@ export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
           {/* image */}
           <Image
             src=""
-            className="h-20 min-w-[102px] w-[102px] rounded-md"
+            className="h-[111px] min-w-[102px] w-[102px] rounded-md"
           ></Image>
           {/* title and genres */}
           <div className="px-3 truncate">
@@ -73,7 +71,7 @@ export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
       {totalItem > 5 ? (
         <button
           onClick={() => props.goToSearchPage()}
-          className="px-3 py-1.5 bg-primary w-full hover:text-body"
+          className="px-3 py-1.5 bg-primary w-full hover:text-body sticky -bottom-2.5 shadow-lg"
         >
           More results
         </button>

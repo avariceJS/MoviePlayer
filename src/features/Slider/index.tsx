@@ -1,12 +1,13 @@
-// Dependencies
-import Slick, { Settings } from 'react-slick'
+// Slick-style
 import 'slick-carousel/slick/slick-theme.css'
 import 'slick-carousel/slick/slick.css'
-import './slider.css'
+import './css/slider.css'
 
-interface SliderProps extends Settings {
-  isFilmCardSlider?: boolean
-}
+// Interface
+import { SliderProps } from './interface'
+
+// react-slick
+import Slick, { Settings } from 'react-slick'
 
 /**
  * Slider component using react-slick for carousels.
@@ -23,8 +24,9 @@ const CustomSlider = ({
   const settings: Settings = {
     ...rest,
     ...(isMovieCard && {
+      infinite: true,
       slidesToShow: 5,
-      slidesToScroll: 5,
+      slidesToScroll: 1,
       swipe: false,
       responsive: [
         {

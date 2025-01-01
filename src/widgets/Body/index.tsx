@@ -1,6 +1,10 @@
+// Pages
+import Film from '@/pages/FilmPage'
+import HomePage from '@/pages/HomePage'
+import MediaCatalog from '@/pages/MediaCatalog'
+
+// Navigate
 import { Route, Routes } from 'react-router-dom'
-import HomePage from '../../pages/HomePage/home-page'
-import MediaCatalog from '../../pages/MediaCatalog/media-catalog'
 
 /**
  * Main Body component to handle application routing.
@@ -30,6 +34,12 @@ const Body = () => {
           path="/search"
           element={<MediaCatalog type="search"></MediaCatalog>}
         ></Route>
+
+        <Route
+          path="/movie/:id"
+          element={<Film mediaType="movie"></Film>}
+        ></Route>
+        <Route path="/tv/:id" element={<Film mediaType="tv"></Film>}></Route>
       </Routes>
     </div>
   )

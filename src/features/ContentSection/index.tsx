@@ -1,12 +1,8 @@
 // Interfaces
-import { CustomComponentProps } from '../interface/interfaces'
+import { ContentSectionProps } from './interface'
 
-// Components
-import LayoutContainer from '../../shared/Container/layout-container'
-
-interface ContentSectionProps extends CustomComponentProps {
-  title?: string
-}
+// Shared -> Container
+import LayoutContainer from '@/shared/Container/layout-container'
 
 /**
  * A reusable section component for layout and content organization.
@@ -16,7 +12,7 @@ interface ContentSectionProps extends CustomComponentProps {
  */
 const ContentSection = (props: ContentSectionProps) => {
   return (
-    <LayoutContainer>
+    <LayoutContainer className={props.className}>
       {props.title ? (
         <h1 className="text-xl px-6 py-1.5">{props.title}</h1>
       ) : (

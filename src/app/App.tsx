@@ -1,8 +1,10 @@
+// Navigate
 import { BrowserRouter } from 'react-router-dom'
-import Body from '../widgets/Body/body'
-import Footer from '../widgets/Footer/footer'
-import Header from '../widgets/Header/header'
 
+// Widgets
+import Body from '@/widgets/Body'
+import Footer from '@/widgets/Footer'
+import Header from '@/widgets/Header'
 
 /**
  * Main application component.
@@ -10,12 +12,10 @@ import Header from '../widgets/Header/header'
  */
 export default function App() {
   return (
-   
-      <BrowserRouter>
-      <Header/>
-      <Body/>
-      <Footer/>
-      </BrowserRouter>
-    
+    <BrowserRouter>
+      <Header />
+      <Body />
+      <Footer />
+    </BrowserRouter>
   )
 }

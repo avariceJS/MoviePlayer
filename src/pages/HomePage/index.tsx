@@ -1,11 +1,14 @@
+// Hooks
 import { useEffect, useState } from 'react'
 
-import ContentSection from '../../features/ContentSection/content-section'
-import { Film } from '../../features/interface/interfaces'
-import CustomSlider from '../../features/Slider/custom-slider'
-import '../../features/Slider/slider.css'
-import TrendingHeroCard from '../../features/TrendingHero/trending-hero-card'
+// Features
+import ContentSection from '@/features/ContentSection'
+import CustomSlider from '@/features/Slider'
+import TheatersCard from '@/features/TheatersCard'
+import TrendingHeroCard from '@/features/TrendingHero'
 
+// Shared -> Interface
+import { Film } from '@/shared/interface/interfaces'
 
 /**
  * Home page component displaying trending and in-theater films.
@@ -19,6 +22,7 @@ const HomePage = () => {
     const fetchFilms = () => {
       const mockData: Film[] = Array.from({ length: 6 }, (_, index) => ({
         id: index + 1,
+        MediaType: 'tv',
         title: `Film ${index + 1}`,
         description: `Description for Film ${index + 1}`,
         coverPath: '',
@@ -46,13 +50,13 @@ const HomePage = () => {
 
       <ContentSection title="In Theaters">
         <CustomSlider
-          isFilmCardSlider
+          isFilmCardSlider={true}
           autoplay={true}
           slidesToShow={5}
           slidesToScroll={5}
         >
           {inTheatersFilms.map((film) => (
-            <TrendingHeroCard key={film.id} trendingFilm={film} />
+            <TheatersCard key={film.id} film={film} />
           ))}
         </CustomSlider>
       </ContentSection>
