@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react'
 
 // Features
 import ContentSection from '@/features/ContentSection'
-import CustomSlider from '@/features/Slider'
-import TheatersCard from '@/features/TheatersCard'
 import TrendingHeroCard from '@/features/TrendingHero'
+import TheatersCard from '@/features/TheatersCard'
+import CustomSlider from '@/features/Slider'
 
 // Shared -> Interface
 import { Film } from '@/shared/interface/interfaces'
+import { title } from 'process'
 
 /**
  * Home page component displaying trending and in-theater films.
@@ -56,7 +57,7 @@ const HomePage = () => {
           slidesToScroll={5}
         >
           {inTheatersFilms.map((film) => (
-            <TheatersCard key={film.id} film={film} />
+            <TheatersCard imageSrc='' key={film.id} title={film.title} />
           ))}
         </CustomSlider>
       </ContentSection>

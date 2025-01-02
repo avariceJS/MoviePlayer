@@ -1,5 +1,8 @@
 // Hooks
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+// Interface
+import { FilmProps } from './interface'
 
 // Navigate
 import { useParams } from 'react-router-dom'
@@ -8,12 +11,18 @@ import { useParams } from 'react-router-dom'
 import ContentSection from '@/features/ContentSection'
 import { Image } from '@/features/Image'
 
-// Shared
-import { Film as FilmInterface } from '@/shared/interface/interfaces'
-import { FilmProps } from './interface'
+// Shared -> interface
+import {
+  Cast,
+  Film as FilmInterface,
+  Trailer,
+} from '@/shared/interface/interfaces'
+import TheatersCard from '@/features/TheatersCard'
 
-const Film = (props: FilmProps) => {
+const FilmPage = (props: FilmProps) => {
   const { params } = useParams()
+  const [casts, setCasts] = useState<Cast[]>([])
+  const [trailers, setTrailers] = useState<Trailer[]>([])
 
   const [film, setFilm] = useState<FilmInterface>({
     id: 0,
@@ -25,9 +34,24 @@ const Film = (props: FilmProps) => {
     seasons: [],
     title: 'film title',
   })
+
+  const fetch = () => {
+    const arrs: any[] = []
+
+    for (let i = 0; i < 6; i++) {
+      arrs.push({})
+    }
+    setCasts(arrs)
+    setTrailers(arrs)
+  }
+
+  useEffect(() => {
+    fetch()
+  }, [])
+
   return (
     <>
-      <div className="h-[300px] left-0 right-0 top-0">
+      <div className="h-[300px] left-0 right-0 top-0 relative">
         <div className="overlay-film-cover"></div>
         <Image src="" className=" h-full w-full   "></Image>
       </div>
@@ -45,8 +69,38 @@ const Film = (props: FilmProps) => {
           <p className="line-clamp-3 opacity-90">{film.description}</p>
         </div>
       </ContentSection>
+      <ContentSection title="Casts">
+        <div className="scrollbar scrollbar-thumb-primary scrollbar-track-sky-900 overflow-x-scroll">
+          <div className="flex items-center gap-3">
+            {casts.map((casts, i) => (
+              <div className="flex-shrink-0 max-w-[200px] my-3">
+                <TheatersCard
+                  imageSrc=""
+                  key={i}
+                  title="title film"
+                ></TheatersCard>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ContentSection>
+      <ContentSection className="mt-6" title="Trailers">
+        <div className="scrollbar scrollbar-thumb-primary scrollbar-track-sky-900 overflow-x-scroll">
+          <div className="flex items-center gap-3">
+            {casts.map((casts, i) => (
+              <div className="flex-shrink-0 max-w-[300px] my-3">
+                <TheatersCard
+                  imageSrc=""
+                  key={i}
+                  title="title film"
+                ></TheatersCard>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ContentSection>
     </>
   )
 }
 
-export default Film
+export default FilmPage

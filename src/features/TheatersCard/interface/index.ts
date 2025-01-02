@@ -1,6 +1,5 @@
-// Shared -> Interface
-import { Film } from '@/shared/interface/interfaces'
-
 export interface TheatersCardInterface {
-  film: Film
+  imageSrc: string
+  title: string
+  onClick?: () => void
 }

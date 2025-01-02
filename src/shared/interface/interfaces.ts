@@ -22,3 +22,14 @@ export interface Film {
   genreIds: number[]
   seasons: Season[]
 }
+
+export interface Cast {
+  id: number
+  name: string
+  characterName: string
+}
+
+export interface Trailer {
+  id: number
+  key: string
+}
