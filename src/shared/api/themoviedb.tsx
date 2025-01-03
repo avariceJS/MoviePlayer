@@ -10,8 +10,12 @@ import {
 } from '../interface/interfaces'
 import { formatResult } from '../utils/formatResult'
 
+const qwe = '123'
+
+const asd = '123'
+
 const axiosClient = axios.create({
-  baseURL: process.env.REACT_APP_TMDB_API_URL,
+  baseURL: qwe,
 })
 
 axiosClient.interceptors.request.use((config) => {
@@ -20,7 +24,7 @@ axiosClient.interceptors.request.use((config) => {
 
     params: {
       ...config.params,
-      api_key: process.env.REACT_APP_TMDB_API_KEY,
+      api_key: asd,
     },
   }
 })

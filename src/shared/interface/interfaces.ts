@@ -28,14 +28,18 @@ export interface Season {
 }
 
 export interface Film {
-  id: number
-  mediaType: MediaType
-  title: string
-  description: string
-  posterPath: string
-  coverPath: string
-  genreIds: number[]
-  seasons: Season[]
+  id?: number
+  mediaType?: MediaType
+  poster_path?: string
+  title?: string
+  name?: string
+  description?: string
+  backdrop_path?: string
+  posterPath?: string
+  coverPath?: string
+  genreIds?: number[]
+  overview?: string
+  seasons?: Season[]
 }
 
 

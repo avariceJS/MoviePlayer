@@ -23,14 +23,14 @@ const TrendingHeroCard = (props: TrendingHeroCardProps) => {
     <div
       className="h-[300px] relative flex items-center cursor-pointer"
       onClick={() =>
-        navigate(`/${props.trendingFilm.MediaType}/${props.trendingFilm.id}`)
+        navigate(`/${props.trendingFilm.mediaType}/${props.trendingFilm.id}`)
       }
     >
       <div className="absolute left-0 top-0 right-0 bottom-0">
         <div className="overlay-slick-hero"></div>
         <Image
           className="w-full h-full"
-          src={props.trendingFilm.coverPath}
+          src={props.trendingFilm.posterPath}
         ></Image>
       </div>
       <div className="flex flex-col items-start relative z-10 mx-[60px] gap-3 max-w-[50%] mobile:max-w-[100%]">
