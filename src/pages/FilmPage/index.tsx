@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { FilmProps } from './interface'
 
 // Navigate
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 // Features
 import ContentSection from '@/features/ContentSection'
@@ -18,22 +18,16 @@ import {
   Trailer,
 } from '@/shared/interface/interfaces'
 import TheatersCard from '@/features/TheatersCard'
+import CustomSlider from '@/features/Slider'
 
 const FilmPage = (props: FilmProps) => {
-  const { params } = useParams()
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [film, setFilm] = useState<FilmInterface | null | undefined>(null)
   const [casts, setCasts] = useState<Cast[]>([])
   const [trailers, setTrailers] = useState<Trailer[]>([])
-
-  const [film, setFilm] = useState<FilmInterface>({
-    id: 0,
-    coverPath: '',
-    description: 'film description',
-    genreIds: [1, 2, 3, 4, 5],
-    MediaType: props.mediaType,
-    posterPath: '',
-    seasons: [],
-    title: 'film title',
-  })
+  const [recommendations, setRecommendations] = useState<FilmInterface[]>([])
 
   const fetch = () => {
     const arrs: any[] = []
@@ -43,11 +37,13 @@ const FilmPage = (props: FilmProps) => {
     }
     setCasts(arrs)
     setTrailers(arrs)
+    setRecommendations(arrs)
   }
 
   useEffect(() => {
+    setFilm(undefined)
     fetch()
-  }, [])
+  }, [location])
 
   return (
     <>
@@ -58,27 +54,29 @@ const FilmPage = (props: FilmProps) => {
       <ContentSection className="-mt-[150px] flex items-start relative z-10 mobile:block">
         <Image src="" className="w-48 h-72"></Image>
         <div className="px-3 flex flex-col gap-3">
-          <p className="text-xl line-clamp-1">{film.title}</p>
+          <p className="text-xl line-clamp-1">{film?.title}</p>
           <ul className="flex items-center gap-3">
-            {film.genreIds.map((genre, i) => (
-              <li className="px-3 py-1.5 border border-primary text-sm" key={i}>
+            {film?.genreIds.map((id, i) => (
+              <li
+                className="px-3 py-1.5 border border-primary text-sm"
+                key={id}
+              >
                 item {i}
               </li>
             ))}
           </ul>
-          <p className="line-clamp-3 opacity-90">{film.description}</p>
+          <p className="line-clamp-3 opacity-90">{film?.description}</p>
         </div>
       </ContentSection>
       <ContentSection title="Casts">
         <div className="scrollbar scrollbar-thumb-primary scrollbar-track-sky-900 overflow-x-scroll">
           <div className="flex items-center gap-3">
             {casts.map((casts, i) => (
-              <div className="flex-shrink-0 max-w-[200px] my-3">
-                <TheatersCard
-                  imageSrc=""
-                  key={i}
-                  title="title film"
-                ></TheatersCard>
+              <div key={i} className="flex-shrink-0 max-w-[200px] mb-6">
+                <TheatersCard imageSrc="" key={i} title="title film">
+                  <p className="font-semibold">{casts.name}</p>
+                  <p className="opacity-[0.9] text-sm">{casts.characterName}</p>
+                </TheatersCard>
               </div>
             ))}
           </div>
@@ -87,7 +85,7 @@ const FilmPage = (props: FilmProps) => {
       <ContentSection className="mt-6" title="Trailers">
         <div className="scrollbar scrollbar-thumb-primary scrollbar-track-sky-900 overflow-x-scroll">
           <div className="flex items-center gap-3">
-            {casts.map((casts, i) => (
+            {trailers.map((trailer, i) => (
               <div className="flex-shrink-0 max-w-[300px] my-3">
                 <TheatersCard
                   imageSrc=""
@@ -98,6 +96,27 @@ const FilmPage = (props: FilmProps) => {
             ))}
           </div>
         </div>
+      </ContentSection>
+      {film?.seasons && (
+        <ContentSection title="Seasons">
+          <CustomSlider slidesToShow={2} slidesToScroll={2}>
+            {film?.seasons.map((season, i) => (
+              <TheatersCard imageSrc="" key={i} title={season.name} />
+            ))}
+          </CustomSlider>
+        </ContentSection>
+      )}
+      <ContentSection title="Recommendations">
+        <CustomSlider slidesToShow={5} slidesToScroll={5}>
+          {recommendations.map((film, i) => (
+            <TheatersCard
+              onClick={() => navigate(`/${props.mediaType}/${film.id}`)}
+              imageSrc=""
+              key={i}
+              title={film.title}
+            />
+          ))}
+        </CustomSlider>
       </ContentSection>
     </>
   )

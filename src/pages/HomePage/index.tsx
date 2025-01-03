@@ -57,7 +57,7 @@ const HomePage = () => {
           slidesToScroll={5}
         >
           {inTheatersFilms.map((film) => (
-            <TheatersCard imageSrc='' key={film.id} title={film.title} />
+            <TheatersCard imageSrc="" key={film.id} title={film.title} />
           ))}
         </CustomSlider>
       </ContentSection>

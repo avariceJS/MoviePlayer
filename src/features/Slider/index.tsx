@@ -18,12 +18,29 @@ import Slick, { Settings } from 'react-slick'
  */
 const CustomSlider = ({
   isFilmCardSlider: isMovieCard,
+  isSeasonCardSlider: isSeasonCard,
   children,
   ...rest
 }: SliderProps) => {
   const settings: Settings = {
     ...rest,
     ...(isMovieCard && {
+      infinite: true,
+      slidesToShow: 5,
+      slidesToScroll: 1,
+      swipe: false,
+      responsive: [
+        {
+          breakpoint: 600,
+          settings: { slidesToShow: 3, slidesToScroll: 3 },
+        },
+        {
+          breakpoint: 480,
+          settings: { slidesToShow: 2, slidesToScroll: 2 },
+        },
+      ],
+    }),
+    ...(isSeasonCard && {
       infinite: true,
       slidesToShow: 5,
       slidesToScroll: 1,
