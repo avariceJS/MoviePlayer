@@ -13,7 +13,7 @@ import {
 } from 'react-router-dom'
 
 // Features
-import { SearchResultsDropdown } from '@/features/SearchResultsDropdown'
+import SearchResultsDropdown from '@/features/SearchResultsDropdown'
 
 // Shared
 import LayoutContainer from '@/shared/Container/layout-container'

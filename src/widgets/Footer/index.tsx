@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="container mx-auto text-center">
         <div className="flex flex-col items-center space-y-4">
           <div className="text-sm">
-            © {new Date().getFullYear()} Your Movie Site. All rights reserved.
+            © {new Date().getFullYear()} FilmHaven. All rights reserved.
           </div>
           <nav className="flex space-x-4">
             <a href="#" className="hover:text-white">

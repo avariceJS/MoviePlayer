@@ -9,7 +9,7 @@ import { Image } from '../Image'
 import { TheatersCardInterface } from './interface'
 
 const TheatersCard = (props: TheatersCardInterface) => {
-  // const navigate = useNavigate()
+
 
   return (
     <div

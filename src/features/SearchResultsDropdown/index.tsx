@@ -1,83 +1,111 @@
-// Hooks
-import { useEffect, useState } from 'react'
-
-// Interfaces
-import { SearchResultsDropdownProps } from './interface'
-
-// Features
+import { search, getGenres } from '@/shared/api/themoviedb'
+import { Film, Genre } from '@/shared/interface/interfaces'
+import { tmdbImageSrc } from '@/shared/utils/ImageSrc'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Image } from '../Image'
 
-// Shared -> interface
-import { Film } from '@/shared/interface/interfaces'
+interface Props {
+  keyword: string
+  goToSearchPage: () => void
+}
 
-/**
- * A dropdown component displaying search results.
- *
- * @param props - Includes the search keyword and a function to navigate to the search page.
- * @returns A styled dropdown with a list of mock search results.
- */
-export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
+const SearchResultsDropdown = ({ keyword, goToSearchPage }: Props) => {
   const [items, setItems] = useState<Film[]>([])
-  const [totalItem, setTotalItem] = useState(6)
+  const [totalItem, setTotalItem] = useState(0)
+  const [genreMap, setGenreMap] = useState<Record<number, string>>({})
+  const searchTimeout = useRef<any>(null)
+  const navigate = useNavigate()
 
-  /**
-   * Loads mock data for the dropdown items.
-   */
-  const loadMockData = () => {
-    const mockFilms: Film[] = []
+  const fetchGenres = async () => {
+    try {
+      const [movieGenres, tvGenres] = await Promise.all([
+        getGenres('movie'),
+        getGenres('tv'),
+      ])
 
-    for (let i = 0; i < 6; i++) {
-      mockFilms.push({
-        id: 1,
-        title: 'lorem',
-        description: '',
-        coverPath: '',
-        genreIds: [1, 2, 3, 4, 5, 6, 7],
-        posterPath: '',
-        seasons: [],
-        mediaType: 'tv',
-      })
+      const genreMapping = [...movieGenres, ...tvGenres].reduce(
+        (acc: Record<number, string>, genre: Genre) => {
+          acc[genre.id] = genre.name
+          return acc
+        },
+        {}
+      )
+
+      console.log('Combined Genre Map:', genreMapping)
+      setGenreMap(genreMapping)
+    } catch (error) {
+      console.error('Error fetching genres:', error)
     }
-    setItems(mockFilms)
+  }
+
+  const fetchResults = async () => {
+    if (!keyword) return
+    clearTimeout(searchTimeout.current)
+
+    searchTimeout.current = setTimeout(async () => {
+      const res = await search(keyword)
+      setTotalItem(res.totalPages || 0)
+      setItems(res.films || [])
+    }, 150)
   }
 
   useEffect(() => {
-    loadMockData()
-  }, [props.keyword])
+    fetchGenres()
+  }, [])
+
+  useEffect(() => {
+    fetchResults()
+  }, [keyword])
 
   return (
-    <div className="absolute top-[48px] left-0 right-0 rounded-md overflow-auto bg-header max-h-[400px] p-3 shadow-lg">
-      {items.map((film, i) => (
-        <div
-          key={i}
-          className="flex items-start p-1.5 rounded-lg hover:bg-primary cursor-pointer m-1.5"
-        >
-          {/* image */}
-          <Image
-            src=""
-            className="h-[111px] min-w-[102px] w-[102px] rounded-md"
-          ></Image>
-          {/* title and genres */}
-          <div className="px-3 truncate">
-            <p className="text-base truncate">{film.title}</p>
-            <ul className="flex flex-wrap gap-x-1.5 text-sm opacity-[0.7]">
-              {film.genreIds.map((id, i) => (
-                <li key={i}> items {i}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      ))}
-      {totalItem > 5 ? (
+    <div className="absolute top-[48px] left-0 right-0 rounded-lg bg-header shadow-lg z-50">
+      <div className="max-h-[400px] overflow-auto p-3 bg-header rounded-lg shadow-inner">
+        {items.length > 0 ? (
+          items.map((film, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-3 p-2 rounded-md hover:bg-primary hover:shadow-md cursor-pointer transition-all"
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
+            >
+              {/* Постер фильма */}
+              <Image
+                src={tmdbImageSrc(film.posterPath)}
+                alt={film.title || 'No Title'}
+                className="h-[72px] w-[102px] rounded-md object-cover"
+              />
+              {/* Информация о фильме */}
+              <div className="flex-1">
+                <p className="text-base font-semibold truncate">
+                  {film.title || 'Untitled'}
+                </p>
+                <ul className="flex flex-wrap gap-1 text-sm text-gray-400">
+                  {film.genreIds.map((id, idx) => (
+                    <li
+                      key={idx}
+                      className="bg-gray-700 px-2 py-1 rounded-md text-white"
+                    >
+                      {genreMap[id] || 'Unknown Genre'}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-400">No results found</p>
+        )}
+      </div>
+      {totalItem > 5 && (
         <button
-          onClick={() => props.goToSearchPage()}
-          className="px-3 py-1.5 bg-primary w-full hover:text-body sticky -bottom-2.5 shadow-lg"
+          onClick={goToSearchPage}
+          className="w-full py-2 bg-primary text-white font-medium hover:bg-primary-dark transition-all sticky bottom-0 rounded-b-lg"
         >
           More results
         </button>
-      ) : (
-        ''
       )}
     </div>
   )
 }
+
+export default SearchResultsDropdown
