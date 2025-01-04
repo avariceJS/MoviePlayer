@@ -1,6 +1,6 @@
 import { Film } from '@/shared/interface/interfaces'
 
-export const isFilm = (film: any): film is Film => {
+export const isFilm = (film: unknown): film is Film => {
   return <Film>film !== undefined
 }
 

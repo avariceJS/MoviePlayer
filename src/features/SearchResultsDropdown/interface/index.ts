@@ -1,4 +1,4 @@
 export interface SearchResultsDropdownProps {
   keyword: string
-  goToSearchPage: Function
+  goToSearchPage: (keyword: string) => void
 }

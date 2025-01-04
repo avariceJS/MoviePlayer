@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import {
   MediaType,
   Film,
@@ -17,6 +17,29 @@ const axiosClient = axios.create({
   baseURL: baseURL,
 })
 
+interface ApiEpisode {
+  id: number
+  name: string
+  overview: string
+  air_date: string
+  still_path: string
+  episode_number: number
+}
+
+interface ApiResponse {
+  poster_path: string
+  results: Film[]
+  total_pages?: number
+  total_results?: number
+  genres?: Genre[]
+  cast?: Cast[]
+  id?: number
+  name?: string
+  season_number: number
+  episodes: ApiEpisode[]
+  air_date: string
+}
+
 axiosClient.interceptors.request.use((config) => {
   return {
     ...config,
@@ -30,12 +53,9 @@ axiosClient.interceptors.request.use((config) => {
 
 export const getTrendings = async (mediaType: MediaType): Promise<Film[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: unknown[]
-      }>
-    >(`/trending/${mediaType}/week`)
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/trending/${mediaType}/week`
+    )
 
     return data.results.map((val) => formatResult(val, mediaType))
   } catch (error) {
@@ -47,12 +67,7 @@ export const getTrendings = async (mediaType: MediaType): Promise<Film[]> => {
 
 export const getInTheaters = async (): Promise<Film[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: unknown[]
-      }>
-    >(`/movie/now_playing`)
+    const { data } = await axiosClient.get<ApiResponse>(`/movie/now_playing`)
 
     return data.results.map((val) => formatResult(val, 'movie'))
   } catch (error) {
@@ -67,16 +82,14 @@ export const getPopulars = async (
   page = 1
 ): Promise<Film[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: unknown[]
-      }>
-    >(`/${mediaType}/popular`, {
-      params: {
-        page,
-      },
-    })
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/${mediaType}/popular`,
+      {
+        params: {
+          page,
+        },
+      }
+    )
 
     return data.results.map((val) => formatResult(val, mediaType))
   } catch (error) {
@@ -94,21 +107,18 @@ export const getTopRated = async (
   totalPages: number
 }> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: unknown[]
-        total_pages: number
-      }>
-    >(`/${mediaType}/top_rated`, {
-      params: {
-        page,
-      },
-    })
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/${mediaType}/top_rated`,
+      {
+        params: {
+          page,
+        },
+      }
+    )
 
     return {
       films: data.results.map((val) => formatResult(val, mediaType)),
-      totalPages: data.total_pages,
+      totalPages: data.total_pages ?? 0,
     }
   } catch (error) {
     console.error(error)
@@ -129,14 +139,7 @@ export const search = async (
   films: Film[]
 }> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        total_pages: number
-        total_results: number
-        results: unknown[]
-      }>
-    >(`/search/multi`, {
+    const { data } = await axiosClient.get<ApiResponse>(`/search/multi`, {
       params: {
         query,
         page,
@@ -144,8 +147,8 @@ export const search = async (
     })
 
     return {
-      totalPages: data.total_pages,
-      totalResults: data.total_results,
+      totalPages: data.total_pages ?? 0,
+      totalResults: data.total_results ?? 0,
       films: data.results.map((val) => formatResult(val)),
     }
   } catch (error) {
@@ -161,12 +164,9 @@ export const search = async (
 
 export const getGenres = async (mediaType: MediaType): Promise<Genre[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        genres: unknown[]
-      }>
-    >(`/genre/${mediaType}/list`)
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/genre/${mediaType}/list`
+    )
 
     return data.genres as Genre[]
   } catch (error) {
@@ -181,7 +181,7 @@ export const getDetail = async (
   id: number
 ): Promise<null | Film> => {
   try {
-    const { data } = await axiosClient.get(`/${mediaType}/${id}`)
+    const { data } = await axiosClient.get<ApiResponse>(`/${mediaType}/${id}`)
 
     return formatResult(data, mediaType)
   } catch (error) {
@@ -196,19 +196,16 @@ export const getCasts = async (
   id: number
 ): Promise<Cast[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        cast: any[]
-      }>
-    >(`/${mediaType}/${id}/credits`)
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/${mediaType}/${id}/credits`
+    )
 
     return (
-      data.cast.map((cast) => ({
+      data.cast?.map((cast) => ({
         id: cast.id,
-        characterName: cast.character,
+        characterName: cast.characterName,
         name: cast.name,
-        profilePath: cast.profile_path,
+        profilePath: cast.profilePath,
       })) ?? []
     )
   } catch (error) {
@@ -223,17 +220,12 @@ export const getTrailers = async (
   id: number
 ): Promise<Trailer[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: any[]
-      }>
-    >(`/${mediaType}/${id}/videos`)
+    const { data } = await axiosClient.get(`/${mediaType}/${id}/videos`)
 
     return (
       data.results
-        .filter((res) => res.site.toLowerCase() === 'youtube')
-        .map((res) => ({
+        .filter((res: Trailer) => res.site.toLowerCase() === 'youtube')
+        .map((res: Trailer) => ({
           id: res.id,
           key: res.key,
         })) ?? []
@@ -250,12 +242,9 @@ export const getRecommendations = async (
   id: number
 ): Promise<Film[]> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        results: unknown[]
-      }>
-    >(`/${mediaType}/${id}/recommendations`)
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/${mediaType}/${id}/recommendations`
+    )
 
     return data.results.map((val) => formatResult(val, mediaType))
   } catch (error) {
@@ -270,30 +259,31 @@ export const getSeason = async (
   seasonNumber: number
 ): Promise<Season | null> => {
   try {
-    const { data } = await axiosClient.get<any, any>(
+    const { data } = await axiosClient.get<ApiResponse>(
       `/tv/${tvId}/season/${seasonNumber}`
     )
 
     const film = await getDetail('tv', tvId)
 
     return {
-      id: data.id,
+      id: data.id ?? 0,
       filmName: film?.title || '',
-      name: data.name,
-      posterPath: data.poster_path,
+      name: data.name || '',
+      posterPath: data.poster_path || '',
       seasonNumber: data.season_number,
       airDate: data.air_date,
-      episodes: data.episodes.map(
-        (episode: any) =>
-          ({
-            id: episode.id,
-            title: episode.name,
-            overview: episode.overview,
-            airDate: episode.air_date,
-            stillPath: episode.still_path,
-            episodeNumber: episode.episode_number,
-          } satisfies Episode)
-      ),
+      episodes:
+        data.episodes.map(
+          (episode: ApiEpisode) =>
+            ({
+              id: episode.id,
+              title: episode.name,
+              overview: episode.overview,
+              airDate: episode.air_date,
+              stillPath: episode.still_path,
+              episodeNumber: episode.episode_number,
+            } satisfies Episode)
+        ) ?? [],
     }
   } catch (error) {
     console.error(error)
@@ -310,21 +300,18 @@ export const discover = async (
   totalPages: number
 }> => {
   try {
-    const { data } = await axiosClient.get<
-      any,
-      AxiosResponse<{
-        total_pages: number
-        results: unknown[]
-      }>
-    >(`/discover/${mediaType}`, {
-      params: {
-        page,
-      },
-    })
+    const { data } = await axiosClient.get<ApiResponse>(
+      `/discover/${mediaType}`,
+      {
+        params: {
+          page,
+        },
+      }
+    )
 
     return {
       films: data.results.map((val) => formatResult(val, mediaType)),
-      totalPages: data.total_pages,
+      totalPages: data.total_pages ?? 0,
     }
   } catch (error) {
     console.error(error)

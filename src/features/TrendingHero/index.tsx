@@ -30,7 +30,7 @@ const TrendingHeroCard = (props: TrendingHeroCardProps) => {
         <div className="overlay-slick-hero"></div>
         <Image
           className="w-full h-full"
-          src={props.trendingFilm.posterPath}
+          src={props.trendingFilm.posterPath ?? ''}
         ></Image>
       </div>
       <div className="flex flex-col items-start relative z-10 mx-[60px] gap-3 max-w-[50%] mobile:max-w-[100%]">

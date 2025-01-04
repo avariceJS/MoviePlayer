@@ -42,7 +42,6 @@ export interface Film {
   seasons?: Season[]
 }
 
-
 export interface Genre {
   id: number
   name: string
@@ -58,4 +57,5 @@ export interface Cast {
 export interface Trailer {
   id: number
   key: string
+  site: string
 }

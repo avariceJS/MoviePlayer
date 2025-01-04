@@ -1,5 +1,5 @@
 // Hooks
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // Icons
 import { IoIosSearch } from 'react-icons/io'
@@ -29,7 +29,7 @@ const MENU_CLASS = 'py-1 px-1.5 hover:bg-primary rounded-md mobile:px-6'
  */
 const Header = () => {
   const location = useLocation()
-  const [params, _] = useSearchParams()
+  const [params] = useSearchParams()
   const navigate = useNavigate()
 
   const [pathname, setPathname] = useState('')
@@ -66,10 +66,10 @@ const Header = () => {
   /**
    * Reset search focus and keyword when clicking outside the input.
    */
-  const onWindowClick = () => {
+  const onWindowClick = useCallback(() => {
     setSearchFocus(false)
     initKeyWord()
-  }
+  }, [])
 
   /**
    * Dynamically generate menu classes based on the current path.
@@ -86,14 +86,14 @@ const Header = () => {
     pathnameRef.current = location.pathname
     defaultKeyword.current = params.get('q') || ''
     initKeyWord()
-  }, [location.pathname])
+  }, [location.pathname, params])
 
   useEffect(() => {
     window.addEventListener('click', onWindowClick)
     return () => {
       window.removeEventListener('click', onWindowClick)
     }
-  }, [])
+  }, [onWindowClick])
 
   return (
     <div className="bg-header sticky top-0 z-50">

@@ -56,7 +56,7 @@ const FilmPage = (props: FilmProps) => {
         <div className="px-3 flex flex-col gap-3">
           <p className="text-xl line-clamp-1">{film?.title}</p>
           <ul className="flex items-center gap-3">
-            {film?.genreIds.map((id, i) => (
+            {film.genreIds.map((id, i) => (
               <li
                 className="px-3 py-1.5 border border-primary text-sm"
                 key={id}

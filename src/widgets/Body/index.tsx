@@ -1,4 +1,5 @@
 // Pages
+import Catalog from '@/features/Catalog/catalog'
 import Film from '@/pages/FilmPage'
 import HomePage from '@/pages/HomePage'
 import MediaCatalog from '@/pages/MediaCatalog'
@@ -20,14 +21,11 @@ const Body = () => {
         {/* Movies catalog route */}
         <Route
           path="/movies"
-          element={<MediaCatalog type="movie"></MediaCatalog>}
+          element={<Catalog type="movie"></Catalog>}
         ></Route>
 
         {/* TV catalog route */}
-        <Route
-          path="/tv"
-          element={<MediaCatalog type="tv"></MediaCatalog>}
-        ></Route>
+        <Route path="/tv" element={<Catalog type="tv"></Catalog>}></Route>
 
         {/* Search results page */}
         <Route
