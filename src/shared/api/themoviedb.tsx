@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {
   MediaType,
   Film,
@@ -196,16 +196,15 @@ export const getCasts = async (
   id: number
 ): Promise<Cast[]> => {
   try {
-    const { data } = await axiosClient.get<ApiResponse>(
-      `/${mediaType}/${id}/credits`
-    )
+    const { data } = await axiosClient.get<ApiResponse
+    >(`/${mediaType}/${id}/credits`)
 
     return (
-      data.cast?.map((cast) => ({
+      data.cast.map((cast) => ({
         id: cast.id,
-        characterName: cast.characterName,
+        characterName: cast.character,
         name: cast.name,
-        profilePath: cast.profilePath,
+        profilePath: cast.profile_path,
       })) ?? []
     )
   } catch (error) {
@@ -214,6 +213,7 @@ export const getCasts = async (
 
   return []
 }
+
 
 export const getTrailers = async (
   mediaType: MediaType,

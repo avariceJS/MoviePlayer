@@ -19,6 +19,7 @@ import {
   getTrendings,
 } from '@/shared/api/themoviedb'
 import { mergeFilms } from '@/shared/utils/mergeFilms'
+import { useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
   const [trendingsFilm, setTrendingsFilm] = useState<Film[]>([])
@@ -26,6 +27,8 @@ const HomePage = () => {
   const [topRatedMovie, setTopRatedMovie] = useState<Film[]>([])
   const [popularsFilm, setPopularsFilm] = useState<Film[]>([])
   const [topRatedTv, setTopRatedTv] = useState<Film[]>([])
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchInTheaters()
@@ -67,6 +70,7 @@ const HomePage = () => {
         <CustomSlider autoplay={true} slidesToShow={1} slidesToScroll={1}>
           {trendingsFilm.map((film) => (
             <TrendingHeroCard
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               key={film.id}
               trendingFilm={{
                 title: film.title || film.name,
@@ -87,6 +91,7 @@ const HomePage = () => {
         >
           {inTheaters.map((film) => (
             <TheatersCard
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               key={film.id}
               imageSrc={`https://image.tmdb.org/t/p/w500${film.posterPath}`}
               title={film.title || 'No Title'}
@@ -103,6 +108,7 @@ const HomePage = () => {
         >
           {popularsFilm.map((film) => (
             <TheatersCard
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               key={film.id}
               imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
               title={film.title || 'No Title'}
@@ -120,6 +126,7 @@ const HomePage = () => {
         >
           {topRatedTv.map((film) => (
             <TheatersCard
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               key={film.id}
               imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
               title={film.title || 'No Title'}
@@ -137,6 +144,7 @@ const HomePage = () => {
         >
           {topRatedMovie.map((film) => (
             <TheatersCard
+              onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
               key={film.id}
               imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
               title={film.title || 'No Title'}

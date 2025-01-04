@@ -6,4 +6,5 @@ export interface TheatersCardInterface {
   title: string
   children?: ReactNode
   onClick?: () => void
+  className?: string
 }
