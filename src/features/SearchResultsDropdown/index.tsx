@@ -35,7 +35,7 @@ export const SearchResultsDropdown = (props: SearchResultsDropdownProps) => {
         genreIds: [1, 2, 3, 4, 5, 6, 7],
         posterPath: '',
         seasons: [],
-        MediaType: 'tv',
+        mediaType: 'tv',
       })
     }
     setItems(mockFilms)

@@ -12,52 +12,66 @@ import { Film } from '@/shared/interface/interfaces'
 
 // Shared -> Utils
 import { tmdbImageSrc } from '@/shared/utils/ImageSrc'
+import {
+  getInTheaters,
+  getPopulars,
+  getTopRated,
+  getTrendings,
+} from '@/shared/api/themoviedb'
+import { mergeFilms } from '@/shared/utils/mergeFilms'
 
-/**
- * Home page component displaying trending and in-theater films.
- */
 const HomePage = () => {
-  const [trendingFilms, setTrendingFilms] = useState<Film[]>([])
-  const [inTheatersFilms, setInTheatersFilms] = useState<Film[]>([])
-
-  const API_KEY = import.meta.env.VITE_API_KEY
-  const baseURL = import.meta.env.VITE_API_URL
+  const [trendingsFilm, setTrendingsFilm] = useState<Film[]>([])
+  const [inTheaters, setInTheaters] = useState<Film[]>([])
+  const [topRatedMovie, setTopRatedMovie] = useState<Film[]>([])
+  const [popularsFilm, setPopularsFilm] = useState<Film[]>([])
+  const [topRatedTv, setTopRatedTv] = useState<Film[]>([])
 
   useEffect(() => {
-    const fetchFilms = async () => {
-      try {
-        const trendingResponse = await fetch(
-          `${baseURL}/trending/all/day?api_key=${API_KEY}`
-        )
-        const trendingData = await trendingResponse.json()
-        console.log('Trending Films:', trendingData)
-        setTrendingFilms(trendingData.results || [])
-
-        const theatersResponse = await fetch(
-          `${baseURL}/movie/now_playing?api_key=${API_KEY}`
-        )
-        const theatersData = await theatersResponse.json()
-
-        setInTheatersFilms(theatersData.results || [])
-      } catch (error) {
-        console.error('error', error)
-      }
-    }
-
-    fetchFilms()
+    fetchInTheaters()
+    fetchPopulars()
+    fetchTrending()
+    fetchTopRatedTv()
+    fetchTopRatedMovie()
   }, [])
+
+  const fetchTrending = async () => {
+    const movies = await getTrendings('movie')
+    const tvs = await getTrendings('tv')
+
+    setTrendingsFilm(mergeFilms(movies, tvs))
+  }
+
+  const fetchInTheaters = async () => {
+    setInTheaters(await getInTheaters())
+  }
+
+  const fetchPopulars = async () => {
+    const movies = await getPopulars('movie')
+    const tvs = await getPopulars('tv')
+
+    setPopularsFilm(mergeFilms(movies, tvs, 20))
+  }
+
+  const fetchTopRatedTv = async () => {
+    setTopRatedTv(await (await getTopRated('tv')).films)
+  }
+
+  const fetchTopRatedMovie = async () => {
+    setTopRatedMovie(await (await getTopRated('movie')).films)
+  }
 
   return (
     <>
       <ContentSection className="py-0">
         <CustomSlider autoplay={true} slidesToShow={1} slidesToScroll={1}>
-          {trendingFilms.map((film) => (
+          {trendingsFilm.map((film) => (
             <TrendingHeroCard
               key={film.id}
               trendingFilm={{
                 title: film.title || film.name,
                 description: film.overview,
-                posterPath: tmdbImageSrc(film.backdrop_path ?? ''),
+                posterPath: tmdbImageSrc(film.coverPath ?? ''),
               }}
             />
           ))}
@@ -71,10 +85,60 @@ const HomePage = () => {
           slidesToShow={5}
           slidesToScroll={5}
         >
-          {inTheatersFilms.map((film) => (
+          {inTheaters.map((film) => (
             <TheatersCard
               key={film.id}
-              imageSrc={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+              imageSrc={`https://image.tmdb.org/t/p/w500${film.posterPath}`}
+              title={film.title || 'No Title'}
+            />
+          ))}
+        </CustomSlider>
+      </ContentSection>
+      <ContentSection title="What's Popular">
+        <CustomSlider
+          isFilmCardSlider={true}
+          autoplay={true}
+          slidesToShow={5}
+          slidesToScroll={5}
+        >
+          {popularsFilm.map((film) => (
+            <TheatersCard
+              key={film.id}
+              imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
+              title={film.title || 'No Title'}
+            />
+          ))}
+        </CustomSlider>
+      </ContentSection>
+      {/* top rated tv */}
+      <ContentSection title="Top rated tv">
+        <CustomSlider
+          isFilmCardSlider={true}
+          autoplay={true}
+          slidesToShow={5}
+          slidesToScroll={5}
+        >
+          {topRatedTv.map((film) => (
+            <TheatersCard
+              key={film.id}
+              imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
+              title={film.title || 'No Title'}
+            />
+          ))}
+        </CustomSlider>
+      </ContentSection>
+      {/* to rated movies*/}
+      <ContentSection title="Top rated movies">
+        <CustomSlider
+          isFilmCardSlider={true}
+          autoplay={true}
+          slidesToShow={5}
+          slidesToScroll={5}
+        >
+          {topRatedMovie.map((film) => (
+            <TheatersCard
+              key={film.id}
+              imageSrc={`https://image.tmdb.org/t/p/original${film.posterPath}`}
               title={film.title || 'No Title'}
             />
           ))}

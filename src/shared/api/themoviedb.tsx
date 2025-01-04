@@ -10,12 +10,11 @@ import {
 } from '../interface/interfaces'
 import { formatResult } from '../utils/formatResult'
 
-const qwe = '123'
-
-const asd = '123'
+const API_KEY = import.meta.env.VITE_API_KEY
+const baseURL = import.meta.env.VITE_API_URL
 
 const axiosClient = axios.create({
-  baseURL: qwe,
+  baseURL: baseURL,
 })
 
 axiosClient.interceptors.request.use((config) => {
@@ -24,7 +23,7 @@ axiosClient.interceptors.request.use((config) => {
 
     params: {
       ...config.params,
-      api_key: asd,
+      api_key: API_KEY,
     },
   }
 })
