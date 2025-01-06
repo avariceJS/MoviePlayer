@@ -1,32 +1,14 @@
-import { MediaType, Film, Season } from '@/shared/interface/interfaces'
+import { MediaType, Film, Season, Genre } from '@/shared/interface/interfaces'
+import { Obj } from './interface'
 
-interface Obj {
-  id: number
-  title?: string
-  name?: string
-  overview?: string
-  backdrop_path?: string
-  poster_path?: string
-  genre_ids?: number[]
-  genres?: Genre[]
-  media_type?: MediaType
-  seasons?: SeasonApi[]
-}
-
-interface Genre {
-  id: number
-  name: string
-}
-
-interface SeasonApi {
-  id: number
-  name: string
-  poster_path: string
-  season_number: number
-  air_date: string
-}
-
-export const formatResult = (obj: Obj, mediaType?: MediaType): Film => {
+/**
+ * Formats an API response into a consistent Film object structure.
+ *
+ * @param {Obj} obj - The API response object to format.
+ * @param {MediaType} [mediaType] - Optional media type (e.g., 'movie' or 'tv').
+ * @returns {Film} - A formatted Film object.
+ */
+export const formatResult = (obj: Obj, mediaType: MediaType): Film => {
   return {
     id: obj.id,
     title: obj.title || obj.name,
@@ -37,14 +19,14 @@ export const formatResult = (obj: Obj, mediaType?: MediaType): Film => {
     mediaType: mediaType || obj.media_type,
     seasons:
       obj.seasons?.map(
-        (season: SeasonApi) =>
+        (season: Season) =>
           ({
             id: season.id,
             filmName: obj.title || '',
             name: season.name,
-            posterPath: season.poster_path,
-            seasonNumber: season.season_number,
-            airDate: season.air_date,
+            posterPath: season.poster_path ?? '',
+            seasonNumber: season.season_number ?? 0,
+            airDate: season.air_date ?? '',
             episodes: [],
           } satisfies Season)
       ) || [],

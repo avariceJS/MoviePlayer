@@ -40,3 +40,20 @@ body {
     theme('colors.body')
   );
 }
+
+.slick-arrow{
+  font-size: 0;
+    line-height: 0;
+    position: absolute;
+    top: 10%;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: none;
+    outline: none;
+    background: transparent;
+}

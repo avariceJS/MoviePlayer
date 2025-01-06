@@ -1,4 +1,4 @@
-// Base
+// base
 import { ReactNode } from 'react'
 
 export type MediaType = 'movie' | 'tv'
@@ -22,13 +22,16 @@ export interface Season {
   filmName: string
   name: string
   seasonNumber: number
+  season_number?: number
   posterPath: string
+  air_date?: string
   episodes: Episode[]
+  poster_path?: string
   airDate: string
 }
 
 export interface Film {
-  id?: number
+  id: number
   mediaType?: MediaType
   poster_path?: string
   title?: string
@@ -39,7 +42,7 @@ export interface Film {
   coverPath?: string
   genreIds?: number[]
   overview?: string
-  seasons?: Season[]
+  seasons: Season[]
 }
 
 export interface Genre {
@@ -50,8 +53,10 @@ export interface Genre {
 export interface Cast {
   id: number
   name: string
-  characterName: string
-  profilePath: string
+  characterName?: string
+  character?: string
+  profilePath?: string
+  profile_path?: string
 }
 
 export interface Trailer {

@@ -1,10 +1,10 @@
-// Navigate
-import { BrowserRouter } from 'react-router-dom'
-
-// Widgets
-import Body from '@/widgets/Body'
+// widgets
+import { Header } from '@/widgets/Header/ui/Header'
 import Footer from '@/widgets/Footer'
-import Header from '@/widgets/Header'
+import Body from '@/widgets/Body'
+
+// navigate
+import { BrowserRouter } from 'react-router-dom'
 
 /**
  * Main application component.

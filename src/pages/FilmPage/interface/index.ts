@@ -1,4 +1,4 @@
-// Shared -> Interface
+// shared -> interface
 import { MediaType } from '@/shared/interface/interfaces'
 
 export interface FilmProps {

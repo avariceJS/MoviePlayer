@@ -1,7 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+// navigate
 import { useLocation, useSearchParams } from 'react-router-dom'
-import { fetchFilms } from '@/entities/film/api/filmRequests'
+
+// shared -> interface
 import { Film, MediaType } from '@/shared/interface/interfaces'
+
+// entities -> api
+import { fetchFilms } from '@/entities/film/api/filmRequests'
+
+// base
+import { useEffect, useRef, useState } from 'react'
 
 export const useCatalog = (type: MediaType | 'search' | 'list') => {
   const [films, setFilms] = useState<Film[]>([])

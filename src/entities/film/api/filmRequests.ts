@@ -1,11 +1,20 @@
-import { discover, search, getTopRated } from '@/shared/api/themoviedb'
-import { MediaType } from '@/shared/interface/interfaces'
+//shared -> api
+import { discover, getTopRated, search } from '@/shared/api/tmdbApi'
 
-interface SearchParams {
-  q?: string
-  title?: string
-}
+// shared -> interface
+import { MediaType} from '@/shared/interface/interfaces'
 
+// interface
+import { SearchParams } from '../interface/interfaces'
+
+/**
+ * Fetch media (films or TV shows) based on type and parameters.
+ *
+ * @param type - Media type (movie, tv, search, or list).
+ * @param params - Search or list parameters (e.g., query or title).
+ * @param page - Page number for pagination.
+ * @returns Fetched data based on the specified type.
+ */
 export const fetchFilms = (
   type: MediaType | 'search' | 'list',
   params: SearchParams,

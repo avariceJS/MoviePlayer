@@ -1,3 +1,9 @@
+/**
+ * Footer component displaying the footer section of the website.
+ *
+ * @returns A footer element containing copyright information, navigation links,
+ *          and social media icons.
+ */
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-400 py-6">

@@ -1,29 +1,53 @@
-import { useCallback, useEffect, useState } from 'react'
+// navigate
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import ContentSection from '@/features/ContentSection'
-import TheatersCard from '@/features/TheatersCard'
+
+// features
+import { ContentSection } from '@/features/ContentSection'
+import { TheatersCard } from '@/features/TheatersCard'
+import { CustomSlider } from '@/features/Slider'
+
+// shared/utils
+import { youtubeThumbnail } from '@/shared/utils/Thumbnail'
+import { tmdbImageSrc } from '@/shared/utils/ImageSrc'
+
+// base
+import { useCallback, useEffect, useState } from 'react'
+
+// shared/components
+import { Image } from '@/shared/components/Image'
+
+// interface
+import { FilmProps } from './interface'
+
+// shared -> api
 import {
   getCasts,
   getDetail,
   getRecommendations,
   getTrailers,
-} from '@/shared/api/themoviedb'
+} from '@/shared/api/tmdbApi'
+
+// shared -> interface
 import {
   Cast,
   Film as FilmInterface,
-  MediaType,
   Trailer,
 } from '@/shared/interface/interfaces'
-import { youtubeThumbnail } from '@/shared/utils/Thumbnail'
-import { tmdbImageSrc } from '@/shared/utils/ImageSrc'
-import CustomSlider from '@/features/Slider'
-import { Image } from '@/features/Image'
 
-interface Props {
-  mediaType: MediaType
-}
-
-export const Film = (props: Props) => {
+/**
+ * Film component displays detailed information about a film or TV show, including:
+ * - Film details (title, description, poster)
+ * - Trailers
+ * - Cast members
+ * - Seasons (for TV shows)
+ * - Recommendations
+ *
+ * @param {object} props - Component props.
+ * @param {MediaType} props.mediaType - Type of media, either 'movie' or 'tv'.
+ *
+ * @returns JSX.Element
+ */
+export const Film = (props: FilmProps) => {
   const location = useLocation()
   const { id } = useParams()
   const navigate = useNavigate()
@@ -34,10 +58,13 @@ export const Film = (props: Props) => {
 
   const fetch = useCallback(async () => {
     const film = await getDetail(props.mediaType, parseInt(id as string))
+    console.log(film)
     if (film) {
       setFilm(film)
-      setCasts(await getCasts(film.mediaType, film.id))
-      setRecommendations(await getRecommendations(film.mediaType, film.id))
+      setCasts(await getCasts(film.mediaType ?? 'movie', film.id))
+      setRecommendations(
+        await getRecommendations(film.mediaType ?? 'movie', film.id)
+      )
       setTrailers(await getTrailers(film.mediaType ?? 'movie', film.id ?? 0))
     }
   }, [props.mediaType, id])
@@ -45,7 +72,6 @@ export const Film = (props: Props) => {
   useEffect(() => {
     setFilm(undefined)
     fetch()
-    console.log(casts)
   }, [location, fetch])
 
   if (film === null) {
@@ -63,13 +89,15 @@ export const Film = (props: Props) => {
       <div className="h-[300px] left-0 right-0 top-0 relative">
         <div className="overlay-film-cover"></div>
         <Image
-          src={tmdbImageSrc(film.coverPath)}
+          alt={film.title ?? 'image'}
+          src={tmdbImageSrc(film.coverPath ?? '')}
           className=" h-full w-full   "
         ></Image>
       </div>
       <ContentSection className="-mt-[150px] flex items-start relative z-10 mobile:block">
         <Image
-          src={tmdbImageSrc(film.posterPath)}
+          alt={film.title ?? 'image'}
+          src={tmdbImageSrc(film.posterPath ?? '')}
           className="w-[200px] min-w-[200px] h-[300px] mobile:mx-auto"
         ></Image>
         <div className="px-3 flex flex-col gap-3">
@@ -105,7 +133,7 @@ export const Film = (props: Props) => {
               <TheatersCard
                 key={i}
                 title=""
-                imageSrc={tmdbImageSrc(cast.profilePath)}
+                imageSrc={tmdbImageSrc(cast.profilePath ?? '')}
               />
               <p className="font-semibold">{cast.name}</p>
               <p className="opacity-[0.9] text-sm">{cast.characterName}</p>
@@ -114,6 +142,32 @@ export const Film = (props: Props) => {
         </CustomSlider>
       </ContentSection>
 
+      <ContentSection title="Seasons">
+        {props.mediaType === 'tv' && film.seasons.length > 0 ? (
+          <CustomSlider
+            isFilmCardSlider={true}
+            autoplay={true}
+            slidesToShow={5}
+            slidesToScroll={5}
+          >
+            {film.seasons.map((season, i) => (
+              <TheatersCard
+                className="h-[300px]"
+                onClick={() =>
+                  navigate(`/tv/${film.id}/season/${season.seasonNumber}`)
+                }
+                title={season.name}
+                imageSrc={tmdbImageSrc(season.posterPath)}
+                key={i}
+              />
+            ))}
+          </CustomSlider>
+        ) : props.mediaType === 'tv' ? (
+          <p>No seasons available for this TV series.</p>
+        ) : (
+          <p>This is a movie, and no seasons are available.</p>
+        )}
+      </ContentSection>
       <ContentSection title="Recommendations">
         <CustomSlider
           isFilmCardSlider={true}
@@ -124,8 +178,8 @@ export const Film = (props: Props) => {
           {recommendations.map((film, i) => (
             <TheatersCard
               onClick={() => navigate(`/${props.mediaType}/${film.id}`)}
-              title={film.title}
-              imageSrc={tmdbImageSrc(film.posterPath)}
+              title={film.title ?? ''}
+              imageSrc={tmdbImageSrc(film.posterPath ?? '')}
               key={i}
             ></TheatersCard>
           ))}
