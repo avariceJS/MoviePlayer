@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/b655378b-d378-43fa-96a4-bec12d0d54ec)# React + TypeScript + Vite# MovieCatalog 
+![image]()# React + TypeScript + Vite# MovieCatalog 
 MovieCatalog is a web application that allows users to explore movies and TV shows. Users can browse through various sections such as popular films, top-rated movies, trending shows, and more.
 
 ![Preview](./src/public/image/githubrepo.jpg)
