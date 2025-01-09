@@ -25,7 +25,7 @@ const TheatersCard = (props: TheatersCardInterface) => {
       className={mergeClassName('mx-3 my-1.5 cursor-pointer', props.className)}
     >
       <Image src={props.imageSrc} alt={props.title} className="h-48 "></Image>
-      <p className="py-1.5 line-clamp-2">{props.title}</p>
+      <p className="py-2 line-clamp-2 flex justify-center">{props.title}</p>
     </div>
   )
 }

@@ -29,11 +29,18 @@ const PopularFilms = () => {
   const navigate = useNavigate()
 
   const fetchPopulars = async () => {
-    const movies = await getPopulars('movie')
-    const tvs = await getPopulars('tv')
-
-    setPopularsFilm(mergeFilms(movies, tvs, 20))
+    const cachedData = localStorage.getItem('popularFilms')
+    if (cachedData) {
+      setPopularsFilm(JSON.parse(cachedData))
+    } else {
+      const movies = await getPopulars('movie')
+      const tvs = await getPopulars('tv')
+      const mergedFilms = mergeFilms(movies, tvs, 20)
+      localStorage.setItem('popularFilms', JSON.stringify(mergedFilms))
+      setPopularsFilm(mergedFilms)
+    }
   }
+
   useEffect(() => {
     fetchPopulars()
   }, [])

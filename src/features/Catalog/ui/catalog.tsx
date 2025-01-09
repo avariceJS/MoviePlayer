@@ -1,4 +1,3 @@
-// features
 import { ContentSection } from '@/features/ContentSection'
 
 // shared -> interface
@@ -18,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 
 // base
 import { useCallback, useEffect } from 'react'
+import LoadingSpinner from '@/features/LoadingSpinner'
 
 interface Props {
   type: MediaType | 'search' | 'list'
@@ -25,10 +25,13 @@ interface Props {
 
 const Catalog = ({ type }: Props) => {
   const navigate = useNavigate()
-  const { films, fetch } = useCatalog(type)
+  const { films, fetch, onLoading } = useCatalog(type)
 
   const onWindowScroll = useCallback(() => {
-    if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.scrollHeight - 100
+    ) {
       fetch()
     }
   }, [fetch])
@@ -42,7 +45,7 @@ const Catalog = ({ type }: Props) => {
 
   return (
     <>
-      <ContentSection title="Catalog">
+      <ContentSection>
         <div className="grid lg:grid-cols-5 sm:grid-cols-4 mobile:grid-cols-3">
           {films.map((film, i) => (
             <TheatersCard
@@ -53,6 +56,12 @@ const Catalog = ({ type }: Props) => {
             />
           ))}
         </div>
+
+        {onLoading && (
+          <div className="text-center py-4">
+            <LoadingSpinner />
+          </div>
+        )}
       </ContentSection>
     </>
   )

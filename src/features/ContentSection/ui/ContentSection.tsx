@@ -14,7 +14,7 @@ const ContentSection = (props: ContentSectionProps) => {
   return (
     <LayoutContainer className={props.className}>
       {props.title ? (
-        <h1 className="text-xl px-6 py-1.5">{props.title}</h1>
+        <h1 className="text-xl px-3 py-1.5 mt-7 mb-3">{props.title}</h1>
       ) : (
         ''
       )}

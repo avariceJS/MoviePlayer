@@ -11,7 +11,7 @@ import { youtubeThumbnail } from '@/shared/utils/Thumbnail'
 import { tmdbImageSrc } from '@/shared/utils/ImageSrc'
 
 // base
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 // shared/components
 import { Image } from '@/shared/components/Image'
@@ -58,9 +58,9 @@ export const Film = (props: FilmProps) => {
 
   const fetch = useCallback(async () => {
     const film = await getDetail(props.mediaType, parseInt(id as string))
-    console.log(film)
     if (film) {
       setFilm(film)
+      console.log(film.seasons)
       setCasts(await getCasts(film.mediaType ?? 'movie', film.id))
       setRecommendations(
         await getRecommendations(film.mediaType ?? 'movie', film.id)
@@ -105,61 +105,62 @@ export const Film = (props: FilmProps) => {
           <p className="line-clamp-3 opacity-90">{film?.description}</p>
         </div>
       </ContentSection>
-      <ContentSection title="Trailers">
-        <div className="overflow-x-auto scrollbar scrollbar-thumb-primary scrollbar-track-sky-900">
-          <div className="flex gap-3">
-            {trailers.map((trailer, i) => (
-              <div key={i} className="flex-shrink-0">
-                <TheatersCard
-                  title=""
-                  imageSrc={youtubeThumbnail(trailer.key)}
-                  onClick={() => handleTrailerClick(trailer.key)}
-                />
-              </div>
-            ))}
+      {trailers.length > 0 && (
+        <ContentSection title="Trailers">
+          <div className="overflow-x-auto scrollbar scrollbar-thumb-primary scrollbar-track-sky-900">
+            <div className="flex gap-3">
+              {trailers.map((trailer) => (
+                <div key={trailer.key} className="flex-shrink-0">
+                  <TheatersCard
+                    title=""
+                    imageSrc={youtubeThumbnail(trailer.key)}
+                    onClick={() => handleTrailerClick(trailer.key)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </ContentSection>
+        </ContentSection>
+      )}
 
-      <ContentSection title="Casts">
-        <CustomSlider
-          isFilmCardSlider={true}
-          autoplay={true}
-          slidesToShow={5}
-          slidesToScroll={5}
-        >
-          {casts.map((cast, i) => (
-            <>
-              <TheatersCard
-                key={i}
-                title=""
-                imageSrc={tmdbImageSrc(cast.profilePath ?? '')}
-              />
-              <p className="font-semibold">{cast.name}</p>
-              <p className="opacity-[0.9] text-sm">{cast.characterName}</p>
-            </>
-          ))}
-        </CustomSlider>
-      </ContentSection>
-
-      <ContentSection title="Seasons">
-        {props.mediaType === 'tv' && film.seasons.length > 0 ? (
+      {trailers.length > 0 && (
+        <ContentSection title="Casts">
           <CustomSlider
             isFilmCardSlider={true}
             autoplay={true}
             slidesToShow={5}
             slidesToScroll={5}
           >
-            {film.seasons.map((season, i) => (
-              <TheatersCard
-                className="h-[300px]"
-                onClick={() =>
-                  navigate(`/tv/${film.id}/season/${season.seasonNumber}`)
-                }
-                title={season.name}
-                imageSrc={tmdbImageSrc(season.posterPath)}
-                key={i}
-              />
+            {casts.map((cast) => (
+              <React.Fragment key={cast.id}>
+                <TheatersCard
+                  title=""
+                  imageSrc={tmdbImageSrc(cast.profilePath ?? '')}
+                />
+                <p className="font-semibold">{cast.name}</p>
+                <p className="opacity-[0.9] text-sm">{cast.characterName}</p>
+              </React.Fragment>
+            ))}
+          </CustomSlider>
+        </ContentSection>
+      )}
+
+      <ContentSection title="Seasons">
+        {props.mediaType === 'tv' && film.seasons.length > 0 ? (
+          <CustomSlider isSeasonCardSlider={true}>
+            {film.seasons.map((season) => (
+              <React.Fragment key={season.seasonNumber}>
+                <TheatersCard
+                  onClick={() =>
+                    navigate(`/tv/${film.id}/season/${season.seasonNumber}`)
+                  }
+                  className="truncate"
+                  title={`${season.name}. was released: ${season.airDate}`}
+                  imageSrc={tmdbImageSrc(
+                    season.posterPath || 'default-image-path'
+                  )}
+                />
+              </React.Fragment>
             ))}
           </CustomSlider>
         ) : props.mediaType === 'tv' ? (
@@ -175,12 +176,12 @@ export const Film = (props: FilmProps) => {
           slidesToShow={5}
           slidesToScroll={5}
         >
-          {recommendations.map((film, i) => (
+          {recommendations.map((film) => (
             <TheatersCard
               onClick={() => navigate(`/${props.mediaType}/${film.id}`)}
               title={film.title ?? ''}
               imageSrc={tmdbImageSrc(film.posterPath ?? '')}
-              key={i}
+              key={film.id}
             ></TheatersCard>
           ))}
         </CustomSlider>
