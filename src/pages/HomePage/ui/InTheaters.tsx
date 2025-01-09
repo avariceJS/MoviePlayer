@@ -24,8 +24,16 @@ import { useEffect, useState } from 'react'
 const InTheaters = () => {
   const [inTheaters, setInTheaters] = useState<Film[]>([])
   const navigate = useNavigate()
+
   const fetchInTheaters = async () => {
-    setInTheaters(await getInTheaters())
+    const cachedData = localStorage.getItem('inTheaters')
+    if (cachedData) {
+      setInTheaters(JSON.parse(cachedData))
+    } else {
+      const films = await getInTheaters()
+      localStorage.setItem('inTheaters', JSON.stringify(films))
+      setInTheaters(films)
+    }
   }
   useEffect(() => {
     fetchInTheaters()

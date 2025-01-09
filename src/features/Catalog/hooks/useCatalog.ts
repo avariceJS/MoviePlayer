@@ -7,19 +7,21 @@ import { Film, MediaType } from '@/shared/interface/interfaces'
 // entities -> api
 import { fetchFilms } from '@/entities/film/api/filmRequests'
 
-// base
-import { useEffect, useRef, useState } from 'react'
+// hooks
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const useCatalog = (type: MediaType | 'search' | 'list') => {
   const [films, setFilms] = useState<Film[]>([])
   const [onLoading, setOnLoading] = useState(false)
   const [params] = useSearchParams()
   const page = useRef(1)
-  const totalPage = useRef(2)
+  const totalPage = useRef(1)
   const loadingRef = useRef(false)
   const location = useLocation()
 
-  const fetch = async () => {
+  const fetch = useCallback(async () => {
+    if (loadingRef.current || page.current > totalPage.current) return
+
     loadingRef.current = true
     setOnLoading(true)
 
@@ -34,16 +36,18 @@ export const useCatalog = (type: MediaType | 'search' | 'list') => {
 
       totalPage.current = totalPages
       setFilms((prev) => [...prev, ...newFilms])
+      page.current += 1
     }
 
     setOnLoading(false)
     loadingRef.current = false
-  }
+  }, [params, type])
 
   useEffect(() => {
     setFilms([])
+    page.current = 1
     fetch()
-  }, [location])
+  }, [location, type, params, fetch])
 
   return { films, onLoading, fetch, page, totalPage, loadingRef }
 }

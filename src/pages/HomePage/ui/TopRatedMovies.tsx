@@ -25,8 +25,16 @@ import { useEffect, useState } from 'react'
 const TopRatedMovies = () => {
   const [topRatedMovie, setTopRatedMovie] = useState<Film[]>([])
   const navigate = useNavigate()
+
   const fetchTopRatedMovie = async () => {
-    setTopRatedMovie(await (await getTopRated('movie')).films)
+    const cachedData = localStorage.getItem('topRatedMovies')
+    if (cachedData) {
+      setTopRatedMovie(JSON.parse(cachedData))
+    } else {
+      const films = await getTopRated('movie')
+      localStorage.setItem('topRatedMovies', JSON.stringify(films.films))
+      setTopRatedMovie(films.films)
+    }
   }
   useEffect(() => {
     fetchTopRatedMovie()

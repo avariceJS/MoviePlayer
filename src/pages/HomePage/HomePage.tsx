@@ -1,9 +1,15 @@
+// features
+import LoadingSpinner from '@/features/LoadingSpinner'
+
+// base
+import React, { Suspense } from 'react'
+
 // ui
-import TopRatedMovies from './ui/TopRatedMovies'
-import TrendingFilms from './ui/TrendingFilms'
-import PopularFilms from './ui/PopularFilms'
-import TopRatedTv from './ui/TopRatedTv'
-import InTheaters from './ui/InTheaters'
+const TrendingFilms = React.lazy(() => import('./ui/TrendingFilms'))
+const InTheaters = React.lazy(() => import('./ui/InTheaters'))
+const PopularFilms = React.lazy(() => import('./ui/PopularFilms'))
+const TopRatedTv = React.lazy(() => import('./ui/TopRatedTv'))
+const TopRatedMovies = React.lazy(() => import('./ui/TopRatedMovies'))
 
 /**
  * HomePage component displays various sections such as:
@@ -17,13 +23,13 @@ import InTheaters from './ui/InTheaters'
  */
 const HomePage = () => {
   return (
-    <>
+    <Suspense fallback={<LoadingSpinner />}>
       <TrendingFilms />
       <InTheaters />
       <PopularFilms />
       <TopRatedTv />
       <TopRatedMovies />
-    </>
+    </Suspense>
   )
 }
 

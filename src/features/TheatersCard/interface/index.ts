@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 export interface TheatersCardInterface {
   imageSrc: string
-  title: string
+  title: string 
   children?: ReactNode
   onClick?: () => void
   className?: string

@@ -29,11 +29,18 @@ import { useEffect, useState } from 'react'
 const TrendingFilms = () => {
   const navigate = useNavigate()
   const [trendingsFilm, setTrendingsFilm] = useState<Film[]>([])
-  const fetchTrending = async () => {
-    const movies = await getTrendings('movie')
-    const tvs = await getTrendings('tv')
 
-    setTrendingsFilm(mergeFilms(movies, tvs))
+  const fetchTrending = async () => {
+    const cachedData = localStorage.getItem('trendings')
+    if (cachedData) {
+      setTrendingsFilm(JSON.parse(cachedData))
+    } else {
+      const movies = await getTrendings('movie')
+      const tvs = await getTrendings('tv')
+      const mergedFilms = mergeFilms(movies, tvs)
+      localStorage.setItem('trendings', JSON.stringify(mergedFilms))
+      setTrendingsFilm(mergedFilms)
+    }
   }
   useEffect(() => {
     fetchTrending()

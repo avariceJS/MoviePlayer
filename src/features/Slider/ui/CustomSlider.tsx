@@ -23,37 +23,56 @@ const CustomSlider = ({
   children,
   ...rest
 }: SliderProps) => {
+  if (!children) {
+    return null
+  }
+
+  const isChildrenArray = Array.isArray(children)
+  const childrenCount = isChildrenArray ? children.length : 1
+
   const settings: Settings = {
     ...rest,
     ...(isMovieCard && {
-      infinite: true,
-      slidesToShow: 5,
+      infinite: childrenCount > 5,
+      slidesToShow: Math.min(5, childrenCount),
       slidesToScroll: 1,
-      swipe: false,
+      swipe: childrenCount > 1,
       responsive: [
         {
           breakpoint: 600,
-          settings: { slidesToShow: 3, slidesToScroll: 3 },
+          settings: {
+            slidesToShow: Math.min(3, childrenCount),
+            slidesToScroll: 1,
+          },
         },
         {
           breakpoint: 480,
-          settings: { slidesToShow: 2, slidesToScroll: 2 },
+          settings: {
+            slidesToShow: Math.min(2, childrenCount),
+            slidesToScroll: 1,
+          },
         },
       ],
     }),
     ...(isSeasonCard && {
-      infinite: true,
-      slidesToShow: 5,
+      infinite: childrenCount > 5,
+      slidesToShow: Math.min(5, childrenCount),
       slidesToScroll: 1,
-      swipe: false,
+      swipe: childrenCount > 1,
       responsive: [
         {
           breakpoint: 600,
-          settings: { slidesToShow: 3, slidesToScroll: 3 },
+          settings: {
+            slidesToShow: Math.min(3, childrenCount),
+            slidesToScroll: 1,
+          },
         },
         {
           breakpoint: 480,
-          settings: { slidesToShow: 2, slidesToScroll: 2 },
+          settings: {
+            slidesToShow: Math.min(2, childrenCount),
+            slidesToScroll: 1,
+          },
         },
       ],
     }),

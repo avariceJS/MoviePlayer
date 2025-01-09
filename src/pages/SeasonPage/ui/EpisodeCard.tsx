@@ -26,7 +26,7 @@ const EpisodeCard = ({
 }: {
   episode: SeasonInterface['episodes'][0]
 }) => (
-  <div className="my-6 flex items-stretch gap-4 rounded-md overflow-hidden cursor-pointer hover:bg-primary px-3 py-1.5 mobile:block">
+  <div className="my-6 flex items-stretch gap-4 rounded-md overflow-hidden px-3 py-1.5 mobile:block font-medium">
     <Image
       alt={episode.title}
       src={tmdbImageSrc(episode.stillPath)}

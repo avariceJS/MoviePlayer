@@ -21,7 +21,6 @@ import { Image } from '@/shared/components/Image'
 const SeasonHeader = ({ season }: { season: SeasonInterface }) => (
   <>
     <div className="h-[150px] left-0 right-0 top-0 relative">
-      <div className="overlay-film-cover"></div>
       <Image
         alt={season.filmName}
         className="rounded-0 rounded-none"
@@ -32,15 +31,15 @@ const SeasonHeader = ({ season }: { season: SeasonInterface }) => (
       <Image
         alt={season.filmName}
         src={tmdbImageSrc(season.posterPath)}
-        className="w-[150px] min-w-[150px] min-h-[200px] h-[200px] mobile:mx-auto"
+        className="w-[150px] min-w-[200px] min-h-[250px] h-[200px] mobile:mx-auto"
       />
       <div className="px-3 flex flex-col items-start gap-3 py-3">
-        <p className="text-xl line-clamp-1">{season.filmName}</p>
+        <p className="text-2xl line-clamp-1">{season.filmName}</p>
         <div className="flex items-center">
-          <p className="text-sm opacity-[0.9]">
+          <p className="text-base opacity-[0.9]">
             {season.name} ({new Date(season.airDate).getFullYear()})
           </p>
-          <p className="text-sm opacity-[0.9] ml-1">
+          <p className="text-xl opacity-[0.9] ml-1 ">
             &#8226; {season.episodes?.length} episodes
           </p>
         </div>
