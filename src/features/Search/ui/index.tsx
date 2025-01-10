@@ -86,17 +86,17 @@ const SearchResultsDropdown = ({
           items.map((film, index) => (
             <div
               key={index}
-              className="flex items-start gap-3 p-2 rounded-md hover:bg-primary hover:shadow-md cursor-pointer transition-all"
+              className="flex items-start gap-3 p-2 rounded-md hover:bg-primary hover:shadow-md cursor-pointer transition-all mb-4"
               onClick={() => navigate(`/${film.mediaType}/${film.id}`)}
             >
               {/* Постер фильма */}
               <Image
                 src={tmdbImageSrc(film.posterPath ?? '')}
                 alt={film.title ?? ''}
-                className="h-[72px] w-[102px] rounded-md object-cover"
+                className="h-[125px] w-min-[200px] w-[125px] rounded-md "
               />
               {/* Информация о фильме */}
-              <div className="flex-1">
+              <div className="flex-1 truncate">
                 <p className="text-base font-semibold truncate">
                   {film.title || 'Untitled'}
                 </p>
@@ -120,7 +120,7 @@ const SearchResultsDropdown = ({
       {totalItem > 5 && (
         <button
           onClick={goToSearchPage}
-          className="w-full py-2 bg-primary text-white font-medium hover:bg-primary-dark transition-all sticky bottom-0 rounded-b-lg"
+          className="w-full py-3 bg-gray-600 text-white font-medium hover:bg-primary-dark transition-all sticky bottom-0 rounded-b-lg"
         >
           More results
         </button>

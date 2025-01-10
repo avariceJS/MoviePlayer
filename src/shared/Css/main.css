@@ -22,7 +22,7 @@ body {
   background: linear-gradient(
     to right,
     theme('colors.body'),
-    transparent 90%,
+    transparent 50%,
     theme('colors.body')
   );
 }

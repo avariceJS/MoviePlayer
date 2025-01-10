@@ -1,7 +1,11 @@
-![image]()# React + TypeScript + Vite# MovieCatalog 
+## MovieCatalog 
 MovieCatalog is a web application that allows users to explore movies and TV shows. Users can browse through various sections such as popular films, top-rated movies, trending shows, and more.
 
-![Preview](./src/public/image/githubrepo.jpg)
+movies page
+![Preview](src/public/image/HomePage.png)
+
+film detail page
+![image](src/public/image/FilmPage.png)
 
 ## Navigation
 1. [Features](#features) ✨
@@ -21,6 +25,7 @@ MovieCatalog is a web application that allows users to explore movies and TV sho
 - React.js
 - TypeScript
 - Tailwind CSS
+- React Router
 - Node.js
 - Axios
 - Vite
@@ -46,7 +51,7 @@ cd MoviePlayer
 
 **Specify the data in the ".env" file**
 
-![Preview](./src/public/image/env.jpg)
+![Preview](src/public/image/env.png)
 
 **Installation**
 

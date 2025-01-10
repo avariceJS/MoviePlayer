@@ -12,7 +12,7 @@ import { ImageProps } from '../interface'
  */
 export const Image = (props: ImageProps) => {
   return (
-    <div className={mergeClassName('bg-primary', props.className)}>
+    <div className={mergeClassName('bg-body', props.className)}>
       <img src={props.src} className="w-full h-full" alt="" />
     </div>
   )

@@ -19,6 +19,8 @@ import { Image } from '@/shared/components/Image'
 // interface
 import { FilmProps } from './interface'
 
+import CastIco from '@/public/image/cast.png'
+
 // shared -> api
 import {
   getCasts,
@@ -86,12 +88,12 @@ export const Film = (props: FilmProps) => {
 
   return (
     <>
-      <div className="h-[300px] left-0 right-0 top-0 relative">
-        <div className="overlay-film-cover"></div>
+      <div className="h-[350px] left-0 right-0 top-0 relative  px-20 bg-gray-900">
+        <div className="overlay-film-cover "></div>
         <Image
           alt={film.title ?? 'image'}
           src={tmdbImageSrc(film.coverPath ?? '')}
-          className=" h-full w-full   "
+          className=" h-full w-full"
         ></Image>
       </div>
       <ContentSection className="-mt-[150px] flex items-start relative z-10 mobile:block">
@@ -135,7 +137,9 @@ export const Film = (props: FilmProps) => {
               <React.Fragment key={cast.id}>
                 <TheatersCard
                   title=""
-                  imageSrc={tmdbImageSrc(cast.profilePath ?? '')}
+                  imageSrc={
+                    cast.profilePath ? tmdbImageSrc(cast.profilePath) : CastIco
+                  }
                 />
                 <p className="font-semibold">{cast.name}</p>
                 <p className="opacity-[0.9] text-sm">{cast.characterName}</p>
@@ -145,8 +149,8 @@ export const Film = (props: FilmProps) => {
         </ContentSection>
       )}
 
-      <ContentSection title="Seasons">
-        {props.mediaType === 'tv' && film.seasons.length > 0 ? (
+      {film.seasons.length > 0 ? (
+        <ContentSection title="Seasons">
           <CustomSlider isSeasonCardSlider={true}>
             {film.seasons.map((season) => (
               <React.Fragment key={season.seasonNumber}>
@@ -163,12 +167,10 @@ export const Film = (props: FilmProps) => {
               </React.Fragment>
             ))}
           </CustomSlider>
-        ) : props.mediaType === 'tv' ? (
-          <p>No seasons available for this TV series.</p>
-        ) : (
-          <p>This is a movie, and no seasons are available.</p>
-        )}
-      </ContentSection>
+        </ContentSection>
+      ) : (
+        ''
+      )}
       <ContentSection title="Recommendations">
         <CustomSlider
           isFilmCardSlider={true}
